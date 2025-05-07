@@ -1,21 +1,21 @@
 import { Navigate, Route, Routes } from "react-router-dom";
-import FloatingShape from "./components/FloatingCircle";
+import FloatingShape from "./components/FloatingShape";
 
-import SignUpPage from "./pages/SignupPage";
+import SignUpPage from "./pages/SignUpPage";
 import LoginPage from "./pages/LoginPage";
 import EmailVerificationPage from "./pages/EmailVerificationPage";
-// import DashboardPage from "./pages/DashboardPage";
-// import ForgotPasswordPage from "./pages/ForgotPasswordPage";
-// import ResetPasswordPage from "./pages/ResetPasswordPage";
+import DashboardPage from "./pages/DashboardPage";
+import ForgotPasswordPage from "./pages/ForgotPasswordPage";
+import ResetPasswordPage from "./pages/ResetPasswordPage";
 
-// import LoadingSpinner from "./components/LoadingSpinner";
+import LoadingSpinner from "./components/LoadingSpinner";
 
 import { Toaster } from "react-hot-toast";
-import { AuthStoreState, useAuthStore } from "./store/authStore";
+import { useAuthStore } from "./store/authStore";
 import { useEffect } from "react";
 
 // protect routes that require authentication
-const ProtectedRoute = ({ children }: any) => {
+const ProtectedRoute = ({ children }) => {
 	const { isAuthenticated, user } = useAuthStore();
 
 	if (!isAuthenticated) {
@@ -30,11 +30,9 @@ const ProtectedRoute = ({ children }: any) => {
 };
 
 // redirect authenticated users to the home page
-const RedirectAuthenticatedUser = ({ children }: any) => {
-    const { user, isAuthenticated }: any = useAuthStore((state: AuthStoreState) => {
-        isAuthenticated: state.isAuthenticated;
-        user: state.user
-    })
+const RedirectAuthenticatedUser = ({ children }) => {
+	const { isAuthenticated, user } = useAuthStore();
+
 	if (isAuthenticated && user.isVerified) {
 		return <Navigate to="/" replace />;
 	}

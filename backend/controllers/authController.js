@@ -82,15 +82,15 @@ export const logout = asyncHandler(async (req, res) => {
 })
 
 export const verifyEmail = asyncHandler(async (req, res) => {
-    const {code, email} = req.body
+    const {code} = req.body
     
-    if (!code || !email) {
+    if (!code) {
         res.status(400)
         throw new Error("Email and Verification Code must be provided.");
     }
 
     const user = await userModel.findOne({
-        email,
+        // email,
 		verificationToken: code,
 		verificationTokenExpiresAt: { $gt: Date.now() },
 	});
