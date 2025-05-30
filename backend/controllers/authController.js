@@ -38,13 +38,14 @@ export const signUp = asyncHandler(async (req, res) => {
     await sendVerificationEmail(user.email, verificationToken)
 
     res.status(201).json({
-        success: true,
-        message: "User Signed up Successfully",
+		success: true,
+		message: "User Signed up Successfully",
         user: {
-            ...user._doc,
-            password: null
+            name: user._doc.name,
+            email: user._doc.email,
+            isVerified: user._doc.isVerified,
         }
-    })
+	});
 })
 
 export const login = asyncHandler(async (req, res) => {
@@ -70,10 +71,18 @@ export const login = asyncHandler(async (req, res) => {
     user.lastLogin = new Date()
     await user.save();
 
-    res.status(200).json({success: true, message: "Logged in successful", user: {
-        ...user._doc,
-        password: undefined
-    }})
+    res.status(200).json({
+		success: true,
+		message: "Logged in successful",
+		user: {
+			id: user._doc._id,
+			name: user._doc.name,
+			email: user._doc.email,
+			role: user._doc.role,
+			isVerified: user._doc.isVerified,
+			lastLogin: user._doc.lastLogin,
+		},
+	});
 })
 
 export const logout = asyncHandler(async (req, res) => {
@@ -82,19 +91,19 @@ export const logout = asyncHandler(async (req, res) => {
 })
 
 export const verifyEmail = asyncHandler(async (req, res) => {
-    const {code} = req.body
+    const {code, email} = req.body
     
-    if (!code) {
+    if (!code || !email) {
         res.status(400)
         throw new Error("Email and Verification Code must be provided.");
     }
 
     const user = await userModel.findOne({
-        // email,
+        email,
 		verificationToken: code,
 		verificationTokenExpiresAt: { $gt: Date.now() },
 	});
-    console.log(user)
+
     if (!user) {
         res.status(400)
         throw new Error("Invalid or Expired Verification code")
@@ -109,9 +118,34 @@ export const verifyEmail = asyncHandler(async (req, res) => {
     await sendWelcomeMail(user.email, user.name);
 
     res.status(200).json({success: true, message: "Email Verified Successfully", user: {
-        ...user._doc,
-        password: undefined
+        email: user._doc.email,
     }})
+})
+
+export const resendVerifyEmail = asyncHandler(async (req, res) => {
+    const {email} = req.body;
+
+    if (!email) {
+        throw new Error("Email not provided.")
+    }
+
+    const user = await userModel.findOne({email});
+
+	if (!user) {
+		res.status(400);
+		throw new Error("User not found.");
+	}
+
+    user.verificationToken = Math.floor(
+		100000 + Math.random() * 900000
+	).toString();
+    user.verificationTokenExpiresAt = Date.now() + 24 * 60 * 60 * 1000
+    
+    await user.save()
+
+    await sendVerificationEmail(user.email, user.verificationToken);
+
+    res.status(200).json({success: true, message: "Verification token sent successfully."})
 })
 
 export const forgotPassword = asyncHandler(async (req, res) => {
@@ -185,5 +219,15 @@ export const checkAuth = asyncHandler(async (req, res) => {
         throw new Error("user not found")
     }
 
-    res.status(200).json({success: true, user})
+    res.status(200).json({
+		success: true,
+		user: {
+			id: user._doc._id,
+			name: user._doc.name,
+			email: user._doc.email,
+			role: user._doc.role,
+			isVerified: user._doc.isVerified,
+			lastLogin: user._doc.lastLogin,
+		},
+	});
 })

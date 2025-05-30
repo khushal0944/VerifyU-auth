@@ -16,7 +16,7 @@ const FloatingShape = ({ color, size, top, left, delay }) => {
 				repeat: Infinity,
 				delay,
 			}}
-			aria-hidden="true"
+			aria-hidden='true'
 		/>
 	);
 };

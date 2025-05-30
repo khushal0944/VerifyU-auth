@@ -21,6 +21,7 @@ async function sendMail(recEmail, htmlContent, subject, category = "VerifyU Emai
             .catch(console.error);
     } catch (error) {
         console.log("Error Sending Mail: ", error);
+        throw new Error("Error Sending Mail: ", error);
     }
 }
 
@@ -42,7 +43,8 @@ export const sendVerificationEmail = async (recEmail, verificationToken) => {
 		).then(() => console.log("Email Sent Successfully"))
         .catch(console.error)
     } catch (error) {
-        console.log(error);
+        console.log("Error Sending Verification Email", error);
+        throw new Error("Error Sending Verification Email", error);
     }
 };
 
