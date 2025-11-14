@@ -40,7 +40,6 @@ const DashboardPage = () => {
 					<h3 className='text-xl font-semibold text-green-400 mb-3'>Account Activity</h3>
 					<p className='text-gray-300'>
 						<span className='font-bold'>Joined: </span>
-                        {console.log(user)}
 						{formatDate(user.createdAt)}
 					</p>
 					<p className='text-gray-300'>
