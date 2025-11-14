@@ -8,9 +8,9 @@ async function sendMail(recEmail, htmlContent, subject, category = "VerifyU Emai
         }
         await transport
             .sendMail({
-                to: recEmail,
+                to: [recEmail],
                 from: {
-                    address: "hi@demomailtrap.co",
+                    address: "verifyu@khushalkumar.me",
                     name: "VerifyU",
                 },
                 subject,
