@@ -16,13 +16,17 @@ const ForgotPasswordPage = () => {
 	const handleSubmit = async (e) => {
 		e.preventDefault();
         try {
-            await forgotPassword(email);
-            navigate("/login");
-            toast.success("Email sent successfully.");
+            await forgotPassword(email.trim().toLowerCase());
+            toast.success("Email sent successfully. Redirecting to Login Page...");
         } catch (error) {
-            toast.error(error?.response?.data?.message || error);
+            toast.error(
+				`${
+					error?.response?.data?.message || error
+				} Redirecting to Login Page...`
+			);
         }
 		setIsSubmitted(true);
+        navigate("/login");
 	};
 
 	return (

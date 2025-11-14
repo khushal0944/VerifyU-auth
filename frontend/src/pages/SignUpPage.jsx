@@ -19,7 +19,7 @@ const SignUpPage = () => {
 		e.preventDefault();
 
 		try {
-			await signup(email, password, name);
+			await signup(email.trim().toLowerCase(), password, name);
 			navigate("/verify-email");
             toast.success("Sign up successful")
 		} catch (error) {

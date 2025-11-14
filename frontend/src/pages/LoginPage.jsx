@@ -10,13 +10,13 @@ const LoginPage = () => {
 	const [email, setEmail] = useState("");
 	const [password, setPassword] = useState("");
 	const navigate = useNavigate();
-	const { login, isLoading, error } = useAuthStore();
+	const { login, isLoading } = useAuthStore();
 
 	const handleLogin = async (e) => {
 		e.preventDefault();
 
 		try {
-			await login(email, password);
+			await login(email.trim().toLowerCase(), password);
 
 			// Get the latest state after login attempt
 			const { user, isAuthenticated } = useAuthStore.getState();
