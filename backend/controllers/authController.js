@@ -18,7 +18,7 @@ export const signUp = asyncHandler(async (req, res) => {
     }
     const userExists = await userModel.findOne({email});
     if (userExists) {
-        return res.status(400).json({message:  "Email already in use.", success: false})
+        return res.status(400).json({message:  "Email already in use. Please Login!", success: false})
     }
     const hashedPassword = await bcrypt.hash(password, 10);
     
@@ -81,6 +81,7 @@ export const login = asyncHandler(async (req, res) => {
 			role: user._doc.role,
 			isVerified: user._doc.isVerified,
 			lastLogin: user._doc.lastLogin,
+            createdAt: user._doc.createdAt,
 		},
 	});
 })
@@ -228,6 +229,7 @@ export const checkAuth = asyncHandler(async (req, res) => {
 			role: user._doc.role,
 			isVerified: user._doc.isVerified,
 			lastLogin: user._doc.lastLogin,
+            createdAt: user._doc.createdAt,
 		},
 	});
 })
